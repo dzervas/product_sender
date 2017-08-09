@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<addon scheme='2.0'>
+	<id>dzervas_product_sender</id>
+	<version>1.0</version>
+	<name>Product Sender</name>
+	<description>Sends product changes to remote CS-Cart store via JSON REST API request</description>
+	<priority>100600</priority>
+	<settings>
+		<sections>
+			<section id="general">
+				<items>
+					<item id="remote">
+						<name>Remote CS-Cart address</name>
+						<type>input</type>
+						<default_value>https://example.com</default_value>
+					</item>
+					<item id="api_email">
+						<name>User e-mail address on remote</name>
+						<type>input</type>
+						<default_value>example@example.com</default_value>
+					</item>
+					<item id="api_key">
+						<name>API key of remote</name>
+						<type>input</type>
+						<default_value>abcdefghijklmnopqrstuvwxyz1234567890</default_value>
+					</item>
+					<item id="product_code">
+						<name>Update SKU (product code) on remote</name>
+						<type>checkbox</type>
+						<default_value>Y</default_value>
+					</item>
+					<item id="part_number">
+						<name>Update barcode (part number) on remote</name>
+						<type>checkbox</type>
+						<default_value>Y</default_value>
+					</item>
+					<item id="amount">
+						<name>Update amount in stock on remote</name>
+						<type>checkbox</type>
+						<default_value>Y</default_value>
+					</item>
+					<item id="status">
+						<name>Update status on remote</name>
+						<type>checkbox</type>
+						<default_value>N</default_value>
+					</item>
+					<item id="create">
+						<name>Create new product on remote</name>
+						<type>checkbox</type>
+						<default_value>N</default_value>
+					</item>
+				</items>
+			</section>
+		</sections>
+	</settings>
+</addon>
