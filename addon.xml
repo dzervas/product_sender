@@ -50,6 +50,11 @@
 						<type>checkbox</type>
 						<default_value>N</default_value>
 					</item>
+					<item id="dummy">
+						<name>Test mode (will not make ANY changes on remote)</name>
+						<type>checkbox</type>
+						<default_value>Y</default_value>
+					</item>
 				</items>
 			</section>
 		</sections>

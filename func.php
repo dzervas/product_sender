@@ -6,7 +6,6 @@ require_once(dirname(__FILE__) . "/lib/restclient.php");
 $old_product_data = array();
 
 function put_product($new_data, $product_code, $from) {
-	//fn_set_notification("N", "Product Sender", "Product $product_code is being processed " . implode(", ", array_keys($new_data)));
 	$send_data = array();
 	foreach ($new_data as $key => $val) {
 		if (Registry::get("addons.dzervas_product_sender.".$key))
@@ -24,6 +23,7 @@ function put_product($new_data, $product_code, $from) {
 	$rid = $api->get("products", ["pcode" => $product_code]);
 	if ($rid->info->http_code != 200) {
 		fn_set_notification("E", "Product Sender", "Failed to communicate with remote server");
+		return;
 	}
 	$rid = $rid->decode_response();
 	if (count($rid->products) != 1) {
@@ -32,14 +32,15 @@ function put_product($new_data, $product_code, $from) {
 	}
 	$rid = $rid->products[0];
 
-	//$res = $api->put("products/" . $rid->product_id, $send_data);
-	//if ($res->info->http_code != 200) {
-		//fn_set_notification("E", "Product Sender", "Failed to communicate with remote server".print_r($res->info, true));
-		//return;
-	//}
+	if (Registry::get("addons.dzervas_product_sender.dummy") == "N") {
+		$res = $api->put("products/" . $rid->product_id, $send_data);
+		if ($res->info->http_code != 200) {
+			fn_set_notification("E", "Product Sender", "Failed to communicate with remote server");
+			return;
+		}
+	}
 
-	fn_set_notification("N", "Product Sender", "Product $product_code sent " . implode(", ", array_keys($send_data)));
-	//file_put_contents("test_test_test", date("d-m-Y H:i:sa") . " status sent. From: $from pcode: $product_code = " . print_r($new_data, true) . "\n", FILE_APPEND);
+	fn_set_notification("N", "Product Sender", "Product $product_code sent " . implode(", ", array_keys($send_data)) . " on remote");
 }
 
 function post_product($product_data, $from) {
@@ -49,15 +50,16 @@ function post_product($product_data, $from) {
 		"username" => Registry::get("addons.dzervas_product_sender.api_email"),
 		"password" => Registry::get("addons.dzervas_product_sender.api_key")
 	]);
-	//$res = $api->post("products/", $product_data);
-	//if ($res->info->http_code != 200) {
-		//fn_set_notification("E", "Product Sender", "Failed to communicate with remote server");
-		//return;
-	//}
 
-	fn_set_notification("N", "Product Sender", "Product " . $product_data["product_code"] . " created");
+	if (Registry::get("addons.dzervas_product_sender.dummy") == "N") {
+		$res = $api->post("products/", $product_data);
+		if ($res->info->http_code != 200) {
+			fn_set_notification("E", "Product Sender", "Failed to communicate with remote server");
+			return;
+		}
+	}
 
-	//file_put_contents("test_test_test", date("d-m-Y H:i:sa") . " new product sent. From: $from pcode: " . $product_data["product_code"] . "\n", FILE_APPEND);
+	fn_set_notification("N", "Product Sender", "Product " . $product_data["product_code"] . " created on remote");
 }
 
 function fn_dzervas_product_sender_tools_change_status($params, $result) {
